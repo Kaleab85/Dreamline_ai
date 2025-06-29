@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { generateTagsAction } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,7 +29,7 @@ function SubmitButton() {
 }
 
 export default function NewPostPage() {
-  const [state, formAction] = useFormState(generateTagsAction, initialState);
+  const [state, formAction] = useActionState(generateTagsAction, initialState);
 
   return (
     <div className="container max-w-2xl mx-auto py-12 md:py-24">

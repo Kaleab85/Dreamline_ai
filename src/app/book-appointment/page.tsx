@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { bookAppointment } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +31,7 @@ function SubmitButton() {
 }
 
 export default function BookAppointmentPage() {
-  const [state, formAction] = useFormState(bookAppointment, initialState);
+  const [state, formAction] = useActionState(bookAppointment, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
