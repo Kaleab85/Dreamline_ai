@@ -11,7 +11,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { logoutAction } from '@/lib/actions';
-import { LogOut } from 'lucide-react';
+import { LogOut, UserPlus } from 'lucide-react';
+import { getSession } from '@/lib/auth';
+import Link from 'next/link';
 
 function LogoutButton() {
   return (
@@ -24,9 +26,26 @@ function LogoutButton() {
   )
 }
 
-export default function AdminAppointmentsPage() {
-  const appointments = getAppointments();
+async function RegisterAdminButton() {
+  const session = await getSession();
 
+  if (session?.role !== 'superadmin') {
+    return null;
+  }
+
+  return (
+    <Button asChild>
+      <Link href="/admin/register">
+        <UserPlus className="mr-2 h-4 w-4" />
+        Register New Admin
+      </Link>
+    </Button>
+  );
+}
+
+export default async function AdminAppointmentsPage() {
+  const appointments = getAppointments();
+  
   return (
     <div className="container mx-auto py-10">
       <Card>
@@ -35,7 +54,10 @@ export default function AdminAppointmentsPage() {
             <CardTitle>Appointments</CardTitle>
             <CardDescription>A list of all scheduled appointments.</CardDescription>
           </div>
-          <LogoutButton />
+          <div className="flex items-center gap-4">
+            <RegisterAdminButton />
+            <LogoutButton />
+          </div>
         </CardHeader>
         <CardContent>
           <Table>

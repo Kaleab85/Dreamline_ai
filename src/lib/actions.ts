@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
 import { revalidatePath } from 'next/cache';
 import { addAppointment } from './appointment-data';
-import { createSession, deleteSession } from './auth';
+import { createSession, deleteSession, getSession } from './auth';
 import { redirect } from 'next/navigation';
+import { addUser, getUserByEmail } from './user-data';
 
 // NOTE: In a real app, you would import and use your Firebase instance
 // import { db } from './firebase'; 
@@ -119,15 +120,69 @@ const loginSchema = z.object({
 export async function loginAction(prevState: any, formData: FormData) {
   const { email, password } = loginSchema.parse(Object.fromEntries(formData.entries()));
 
-  // Hardcoded credentials for this example
-  if (email === 'admin@example.com' && password === 'password') {
-    await createSession(email);
-    redirect('/admin/appointments');
-  }
+  const user = getUserByEmail(email);
 
-  return { message: 'Invalid email or password' };
+  if (!user || user.password !== password) {
+    return { message: 'Invalid email or password' };
+  }
+  
+  // In a real app, you'd compare a hashed password
+  await createSession(user.id, user.role);
+  redirect('/admin/appointments');
 }
 
 export async function logoutAction() {
     await deleteSession();
+}
+
+const registerAdminSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+});
+
+export async function registerAdminAction(prevState: any, formData: FormData) {
+  const session = await getSession();
+  if (session?.role !== 'superadmin') {
+    return {
+      type: 'error',
+      message: 'Unauthorized: Only superadmins can register new users.',
+    };
+  }
+
+  const validatedFields = registerAdminSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return {
+      type: 'error',
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Please correct the form errors.',
+    };
+  }
+  
+  const { email, password } = validatedFields.data;
+
+  // Check if user already exists
+  if (getUserByEmail(email)) {
+    return {
+      type: 'error',
+      errors: { email: ['An admin with this email already exists.'] },
+      message: 'An admin with this email already exists.',
+    };
+  }
+
+  try {
+    // Add the new user with 'admin' role. In a real app, you'd hash the password.
+    addUser({ email, password, role: 'admin' });
+    
+    return {
+      type: 'success',
+      message: `Admin user ${email} registered successfully.`,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      type: 'error',
+      message: 'Something went wrong during registration. Please try again.',
+    };
+  }
 }
