@@ -2,6 +2,8 @@
 
 import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
+import { revalidatePath } from 'next/cache';
+import { addAppointment } from './appointment-data';
 
 // NOTE: In a real app, you would import and use your Firebase instance
 // import { db } from './firebase'; 
@@ -28,9 +30,11 @@ export async function bookAppointment(prevState: any, formData: FormData) {
   }
 
   try {
-    // In a real app, you would save this to Firebase
-    console.log('Saving appointment to database:', validatedFields.data);
-    // await addDoc(collection(db, "appointments"), validatedFields.data);
+    // In a real app, you would save this to a real database
+    addAppointment(validatedFields.data);
+    
+    // Revalidate the admin page to show the new appointment
+    revalidatePath('/admin/appointments');
     
     return { type: 'success', message: 'Appointment booked successfully! We will be in touch soon.' };
   } catch (e) {

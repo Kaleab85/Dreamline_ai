@@ -9,6 +9,8 @@ export interface Appointment {
   message?: string;
 }
 
+// This will act as our in-memory database.
+// NOTE: This data will be reset on every server restart.
 const appointments: Appointment[] = [
   {
     id: '1',
@@ -49,4 +51,12 @@ const appointments: Appointment[] = [
 
 export function getAppointments(): Appointment[] {
   return appointments;
+}
+
+export function addAppointment(appointmentData: Omit<Appointment, 'id'>) {
+    const newAppointment: Appointment = {
+        id: String(Date.now()), // Use timestamp for a more unique ID
+        ...appointmentData,
+    };
+    appointments.push(newAppointment);
 }
