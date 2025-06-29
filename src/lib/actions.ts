@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
 import { revalidatePath } from 'next/cache';
 import { addAppointment } from './appointment-data';
+import { createSession, deleteSession } from './auth';
+import { redirect } from 'next/navigation';
 
 // NOTE: In a real app, you would import and use your Firebase instance
 // import { db } from './firebase'; 
@@ -107,4 +109,25 @@ export async function generateTagsAction(prevState: any, formData: FormData) {
             errors: null,
         };
     }
+}
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export async function loginAction(prevState: any, formData: FormData) {
+  const { email, password } = loginSchema.parse(Object.fromEntries(formData.entries()));
+
+  // Hardcoded credentials for this example
+  if (email === 'admin@example.com' && password === 'password') {
+    await createSession(email);
+    redirect('/admin/appointments');
+  }
+
+  return { message: 'Invalid email or password' };
+}
+
+export async function logoutAction() {
+    await deleteSession();
 }

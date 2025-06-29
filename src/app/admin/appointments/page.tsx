@@ -9,6 +9,20 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { logoutAction } from '@/lib/actions';
+import { LogOut } from 'lucide-react';
+
+function LogoutButton() {
+  return (
+    <form action={logoutAction}>
+      <Button variant="outline">
+        <LogOut className="mr-2 h-4 w-4" />
+        Logout
+      </Button>
+    </form>
+  )
+}
 
 export default function AdminAppointmentsPage() {
   const appointments = getAppointments();
@@ -16,9 +30,12 @@ export default function AdminAppointmentsPage() {
   return (
     <div className="container mx-auto py-10">
       <Card>
-        <CardHeader>
-          <CardTitle>Appointments</CardTitle>
-          <CardDescription>A list of all scheduled appointments.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Appointments</CardTitle>
+            <CardDescription>A list of all scheduled appointments.</CardDescription>
+          </div>
+          <LogoutButton />
         </CardHeader>
         <CardContent>
           <Table>
