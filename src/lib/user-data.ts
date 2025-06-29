@@ -30,6 +30,10 @@ export function getUserByEmail(email: string): User | undefined {
   return globalForUsers.users!.find(user => user.email === email);
 }
 
+export function getUserById(id: string): User | undefined {
+    return globalForUsers.users!.find(user => user.id === id);
+}
+
 export function addUser(userData: Omit<User, 'id'>) {
     const newUser: User = {
         id: String(Date.now()),
