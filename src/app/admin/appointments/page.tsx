@@ -9,9 +9,12 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { CalendarDays, Inbox } from 'lucide-react';
+import { CalendarDays, Inbox, UserPlus } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
+import { getSession } from '@/lib/auth';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 function formatServiceName(service: string) {
     if (!service) return 'N/A';
@@ -23,17 +26,28 @@ function formatServiceName(service: string) {
 
 export default async function AdminAppointmentsPage() {
   const appointments = getAppointments();
+  const session = await getSession();
   
   return (
     <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-            <div className="bg-secondary p-3 rounded-lg">
-                <CalendarDays className="h-6 w-6 text-accent" />
+        <CardHeader className="flex flex-row items-start justify-between gap-4">
+            <div className="flex items-center gap-4">
+                <div className="bg-secondary p-3 rounded-lg">
+                    <CalendarDays className="h-6 w-6 text-accent" />
+                </div>
+                <div>
+                    <CardTitle className="font-headline text-2xl">Appointments</CardTitle>
+                    <CardDescription>A list of all scheduled appointments.</CardDescription>
+                </div>
             </div>
-            <div>
-                <CardTitle className="font-headline text-2xl">Appointments</CardTitle>
-                <CardDescription>A list of all scheduled appointments.</CardDescription>
-            </div>
+            {session?.role === 'superadmin' && (
+              <Button asChild>
+                <Link href="/admin/register">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Register New Admin
+                </Link>
+              </Button>
+            )}
         </CardHeader>
         <CardContent>
         <div className="border rounded-lg overflow-hidden">
