@@ -9,9 +9,12 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { CalendarDays, Inbox } from 'lucide-react';
+import { CalendarDays, Inbox, UserPlus } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
+import { getSession } from '@/lib/auth';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 function formatServiceName(service: string) {
     if (!service) return 'N/A';
@@ -23,6 +26,8 @@ function formatServiceName(service: string) {
 
 export default async function AdminAppointmentsPage() {
   const appointments = getAppointments();
+  const session = await getSession();
+  const isSuperAdmin = session?.role === 'superadmin';
   
   return (
     <Card>
@@ -36,6 +41,14 @@ export default async function AdminAppointmentsPage() {
                     <CardDescription>A list of all scheduled appointments.</CardDescription>
                 </div>
             </div>
+            {isSuperAdmin && (
+              <Button asChild>
+                <Link href="/admin/register">
+                  <UserPlus className="mr-2" />
+                  Register Admin
+                </Link>
+              </Button>
+            )}
         </CardHeader>
         <CardContent>
         <div className="border rounded-lg overflow-hidden">
