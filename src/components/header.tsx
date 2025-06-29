@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from './ui/sheet';
 import { Menu } from 'lucide-react';
@@ -17,6 +18,7 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,7 +46,7 @@ export function Header() {
           <Button asChild className="hidden md:inline-flex">
             <Link href="/book-appointment">Book Appointment</Link>
           </Button>
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" className="md:hidden">
                 <Menu className="h-6 w-6" />
@@ -52,16 +54,17 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
-              <SheetHeader className="sr-only">
-                <SheetTitle>Navigation Menu</SheetTitle>
+              <SheetHeader>
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col p-4">
-                <Logo />
+                <Logo onClick={() => setIsMobileMenuOpen(false)} />
                 <nav className="grid gap-4 mt-8 text-lg">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
                         'transition-colors hover:text-primary',
                         pathname === link.href ? 'text-primary font-semibold' : 'text-muted-foreground'
@@ -72,7 +75,7 @@ export function Header() {
                   ))}
                 </nav>
                 <Button asChild className="mt-8">
-                  <Link href="/book-appointment">Book Appointment</Link>
+                  <Link href="/book-appointment" onClick={() => setIsMobileMenuOpen(false)}>Book Appointment</Link>
                 </Button>
               </div>
             </SheetContent>
