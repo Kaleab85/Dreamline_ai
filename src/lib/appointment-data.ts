@@ -1,12 +1,16 @@
 
+
+export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed';
+
 export interface Appointment {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone:string;
   service: string;
   date: string;
   message?: string;
+  status: AppointmentStatus;
 }
 
 // Use globalThis to ensure the array persists across hot reloads in development.
@@ -23,48 +27,66 @@ if (!globalForAppointments.appointments) {
       name: 'John Doe',
       email: 'john.doe@example.com',
       phone: '(555) 123-4567',
-      service: 'Educational Consultation',
+      service: 'educational-consultation',
       date: '2024-07-15',
       message: 'Looking for advice on universities in Canada.',
+      status: 'Confirmed',
     },
     {
       id: '2',
       name: 'Jane Smith',
       email: 'jane.smith@example.com',
       phone: '(555) 987-6543',
-      service: 'Visa Application Assistance',
+      service: 'visa-assistance',
       date: '2024-07-18',
       message: 'Need help with my UK student visa application.',
+      status: 'Pending',
     },
     {
       id: '3',
       name: 'Sam Wilson',
       email: 'sam.wilson@example.com',
       phone: '(555) 234-5678',
-      service: 'Travel Coordination',
+      service: 'travel-coordination',
       date: '2024-07-20',
+      status: 'Pending',
     },
       {
       id: '4',
       name: 'Maria Garcia',
       email: 'maria.garcia@example.com',
       phone: '(555) 876-5432',
-      service: 'Educational Consultation',
+      service: 'educational-consultation',
       date: '2024-07-22',
       message: 'Interested in postgraduate studies in Australia.',
+      status: 'Completed',
     },
   ];
 }
 
-export function getAppointments(): Appointment[] {
-  // Always get the appointments from the global scope to ensure persistence
-  return globalForAppointments.appointments!;
+export function getAppointments(filters?: { service?: string; status?: AppointmentStatus }): Appointment[] {
+  let filteredAppointments = globalForAppointments.appointments!;
+
+  if (filters?.service && filters.service !== 'all') {
+    filteredAppointments = filteredAppointments.filter(
+      (appointment) => appointment.service === filters.service
+    );
+  }
+
+  if (filters?.status && filters.status !== 'all') {
+    filteredAppointments = filteredAppointments.filter(
+      (appointment) => appointment.status === filters.status
+    );
+  }
+  
+  return filteredAppointments;
 }
 
-export function addAppointment(appointmentData: Omit<Appointment, 'id'>) {
+export function addAppointment(appointmentData: Omit<Appointment, 'id' | 'status'>) {
     const newAppointment: Appointment = {
         id: String(Date.now()), // Use timestamp for a more unique ID
         ...appointmentData,
+        status: 'Pending',
     };
     // Push to the global array
     globalForAppointments.appointments!.push(newAppointment);

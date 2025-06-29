@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -155,7 +156,6 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
     return {
       type: 'error',
       errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Please correct the form errors.',
     };
   }
   
@@ -166,7 +166,6 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
     return {
       type: 'error',
       errors: { email: ['An admin with this email already exists.'] },
-      message: 'An admin with this email already exists.',
     };
   }
 

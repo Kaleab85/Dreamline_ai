@@ -1,5 +1,7 @@
 
+
 import { getAppointments } from '@/lib/appointment-data';
+import type { AppointmentStatus } from '@/lib/appointment-data';
 import {
   Table,
   TableHeader,
@@ -15,6 +17,8 @@ import { Badge } from '@/components/ui/badge';
 import { getSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { AppointmentFilters } from './_components/appointment-filters';
+import { cn } from '@/lib/utils';
 
 function formatServiceName(service: string) {
     if (!service) return 'N/A';
@@ -24,8 +28,21 @@ function formatServiceName(service: string) {
       .join(' ');
 }
 
-export default async function AdminAppointmentsPage() {
-  const appointments = getAppointments();
+const statusBadgeVariants: Record<AppointmentStatus, string> = {
+    Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100',
+    Confirmed: 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100',
+    Completed: 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100'
+}
+
+export default async function AdminAppointmentsPage({
+  searchParams,
+}: {
+  searchParams?: {
+    service?: string;
+    status?: AppointmentStatus;
+  };
+}) {
+  const appointments = getAppointments(searchParams);
   const session = await getSession();
   const isSuperAdmin = session?.role === 'superadmin';
   
@@ -51,6 +68,7 @@ export default async function AdminAppointmentsPage() {
             )}
         </CardHeader>
         <CardContent>
+        <AppointmentFilters />
         <div className="border rounded-lg overflow-hidden">
             <Table>
                 <TableHeader>
@@ -58,6 +76,7 @@ export default async function AdminAppointmentsPage() {
                     <TableHead className="w-[250px] font-semibold">Client</TableHead>
                     <TableHead className="font-semibold">Service</TableHead>
                     <TableHead className="font-semibold">Preferred Date</TableHead>
+                    <TableHead className="font-semibold">Status</TableHead>
                     <TableHead className="font-semibold">Message</TableHead>
                 </TableRow>
                 </TableHeader>
@@ -74,16 +93,21 @@ export default async function AdminAppointmentsPage() {
                             <Badge variant="secondary">{formatServiceName(appointment.service)}</Badge>
                         </TableCell>
                         <TableCell>{appointment.date ? format(new Date(appointment.date + 'T00:00'), 'PPP') : 'N/A'}</TableCell>
+                        <TableCell>
+                           <Badge className={cn(statusBadgeVariants[appointment.status])}>
+                             {appointment.status}
+                           </Badge>
+                        </TableCell>
                         <TableCell className="max-w-sm truncate">{appointment.message || 'N/A'}</TableCell>
                     </TableRow>
                     ))
                 ) : (
                     <TableRow>
-                        <TableCell colSpan={4} className="h-48 text-center">
+                        <TableCell colSpan={5} className="h-48 text-center">
                             <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                                 <Inbox className="h-12 w-12" />
-                                <h3 className="text-xl font-semibold">No appointments yet</h3>
-                                <p>New appointments will appear here once submitted.</p>
+                                <h3 className="text-xl font-semibold">No appointments found</h3>
+                                <p>There are no appointments matching the current filters.</p>
                             </div>
                         </TableCell>
                     </TableRow>
