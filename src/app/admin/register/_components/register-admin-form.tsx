@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useRef } from 'react';
@@ -6,7 +7,7 @@ import { registerAdminAction } from '@/lib/actions';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Terminal } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -32,7 +33,7 @@ export function RegisterAdminForm() {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (state.type === 'success') {
+    if (state.type === 'success' && state.message) {
       toast({
         title: 'Admin Registered!',
         description: state.message,
@@ -46,13 +47,6 @@ export function RegisterAdminForm() {
       {state.type === 'error' && state.message && (
         <Alert variant="destructive">
           <AlertTitle>Registration Failed</AlertTitle>
-          <AlertDescription>{state.message}</AlertDescription>
-        </Alert>
-      )}
-      {state.type === 'success' && state.message && (
-        <Alert>
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Success!</AlertTitle>
           <AlertDescription>{state.message}</AlertDescription>
         </Alert>
       )}
