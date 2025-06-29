@@ -9,21 +9,24 @@ export function AdminSidebarNav({ isSuperAdmin }: { isSuperAdmin: boolean }) {
     
     const navItems = [
         { href: '/admin/appointments', label: 'Appointments', icon: Calendar },
-        ...(isSuperAdmin ? [{ href: '/admin/register', label: 'Register Admin', icon: UserPlus }] : []),
+        { href: '/admin/register', label: 'Register Admin', icon: UserPlus },
         { href: '/', label: 'Site Home', icon: Home },
     ];
 
     return (
         <SidebarMenu>
             {navItems.map(item => (
-                 <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive={pathname === item.href}>
-                        <Link href={item.href}>
-                            <item.icon />
-                            {item.label}
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
+                //  The registration link is only shown to superadmins, but the logic was moved to the page itself for redirection.
+                 (item.href !== '/admin/register' || isSuperAdmin) && (
+                    <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton asChild isActive={pathname === item.href}>
+                            <Link href={item.href}>
+                                <item.icon />
+                                {item.label}
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                 )
             ))}
         </SidebarMenu>
     );
