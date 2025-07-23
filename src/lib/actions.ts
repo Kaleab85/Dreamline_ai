@@ -23,7 +23,14 @@ const appointmentSchema = z.object({
 });
 
 export async function bookAppointment(prevState: any, formData: FormData) {
-  const validatedFields = appointmentSchema.safeParse(Object.fromEntries(formData.entries()));
+  const validatedFields = appointmentSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    phone: formData.get('phone'),
+    service: formData.get('service'),
+    date: formData.get('date'),
+    message: formData.get('message'),
+  });
 
   if (!validatedFields.success) {
     return {
