@@ -1,5 +1,4 @@
 
-
 import { getAppointments } from '@/lib/appointment-data';
 import type { AppointmentStatus } from '@/lib/appointment-data';
 import {
@@ -42,7 +41,7 @@ export default async function AdminAppointmentsPage({
     status?: AppointmentStatus;
   };
 }) {
-  const appointments = getAppointments(searchParams);
+  const appointments = await getAppointments(searchParams);
   const session = await getSession();
   const isSuperAdmin = session?.role === 'superadmin';
   

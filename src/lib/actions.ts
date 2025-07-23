@@ -8,10 +8,8 @@ import { addAppointment } from './appointment-data';
 import { createSession, deleteSession, getSession } from './auth';
 import { redirect } from 'next/navigation';
 import { addUser, getUserByEmail } from './user-data';
-
-// NOTE: In a real app, you would import and use your Firebase instance
-// import { db } from './firebase'; 
-// import { collection, addDoc } from 'firebase/firestore';
+import { db } from './firebase'; 
+import { collection, addDoc } from 'firebase/firestore';
 
 const appointmentSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -41,8 +39,7 @@ export async function bookAppointment(prevState: any, formData: FormData) {
   }
 
   try {
-    // In a real app, you would save this to a real database
-    addAppointment(validatedFields.data);
+    await addAppointment(validatedFields.data);
     
     // Revalidate the admin page to show the new appointment
     revalidatePath('/admin/appointments');
@@ -74,9 +71,7 @@ export async function submitContactForm(prevState: any, formData: FormData) {
     }
 
     try {
-        // In a real app, you would save this to Firebase
-        console.log('Saving contact message to database:', validatedFields.data);
-        // await addDoc(collection(db, "contacts"), validatedFields.data);
+        await addDoc(collection(db, "contacts"), validatedFields.data);
 
         return { type: 'success', message: 'Your message has been sent! We will get back to you shortly.' };
     } catch (e) {
@@ -128,7 +123,7 @@ const loginSchema = z.object({
 export async function loginAction(prevState: any, formData: FormData) {
   const { email, password } = loginSchema.parse(Object.fromEntries(formData.entries()));
 
-  const user = getUserByEmail(email);
+  const user = await getUserByEmail(email);
 
   if (!user || user.password !== password) {
     return { message: 'Invalid email or password' };
@@ -169,7 +164,7 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
   const { email, password } = validatedFields.data;
 
   // Check if user already exists
-  if (getUserByEmail(email)) {
+  if (await getUserByEmail(email)) {
     return {
       type: 'error',
       errors: { email: ['An admin with this email already exists.'] },
@@ -178,7 +173,7 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
 
   try {
     // Add the new user with 'admin' role. In a real app, you'd hash the password.
-    addUser({ email, password, role: 'admin' });
+    await addUser({ email, password, role: 'admin' });
     
     return {
       type: 'success',
