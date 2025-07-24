@@ -2,13 +2,14 @@
 import { usePathname } from 'next/navigation';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { Calendar, UserPlus, Home } from 'lucide-react';
+import { Calendar, UserPlus, Home, Tags } from 'lucide-react';
 
 export function AdminSidebarNav({ isSuperAdmin }: { isSuperAdmin: boolean }) {
     const pathname = usePathname();
     
     const navItems = [
         { href: '/admin/appointments', label: 'Appointments', icon: Calendar, adminOnly: false },
+        { href: '/admin/generate-tags', label: 'Generate Tags', icon: Tags, adminOnly: false },
         { href: '/admin/register', label: 'Register Admin', icon: UserPlus, adminOnly: true },
         { href: '/', label: 'Site Home', icon: Home, adminOnly: false },
     ];
