@@ -266,7 +266,7 @@ export async function setupSuperAdminAction(prevState: any, formData: FormData) 
     if (users.length > 0) {
       return {
         type: 'error',
-        message: 'A superadmin already exists.',
+        message: 'A superadmin already exists. You should login instead.',
       };
     }
   
@@ -286,8 +286,9 @@ export async function setupSuperAdminAction(prevState: any, formData: FormData) 
       const newUser = await getUserByEmail(email);
       if (newUser) {
           await createSession(newUser.id, 'superadmin');
+      } else {
+         throw new Error('Failed to retrieve new user after creation.');
       }
-      redirect('/admin/appointments');
     } catch (e) {
       console.error(e);
       return {
@@ -295,4 +296,6 @@ export async function setupSuperAdminAction(prevState: any, formData: FormData) 
         message: 'Something went wrong during setup. Please try again.',
       };
     }
-  }
+    // Redirect must be called outside of try/catch
+    redirect('/admin/appointments');
+}

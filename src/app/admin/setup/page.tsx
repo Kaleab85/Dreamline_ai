@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useActionState } from 'react';
@@ -41,7 +40,7 @@ export default function SetupPage() {
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Admin Setup</CardTitle>
           <CardDescription>
-            Welcome! Let's create the first super admin account.
+            Welcome! Let's create the first super admin account. This page can only be used once.
           </CardDescription>
         </CardHeader>
         <form action={formAction}>
