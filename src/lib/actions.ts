@@ -4,7 +4,7 @@
 import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
 import { revalidatePath } from 'next/cache';
-import { addAppointment } from './appointment-data';
+import { addAppointment, deleteAppointment } from './appointment-data';
 import { createSession, deleteSession, getSession } from './auth';
 import { redirect } from 'next/navigation';
 import { addUser, getUserByEmail } from './user-data';
@@ -186,4 +186,25 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
       message: 'Something went wrong during registration. Please try again.',
     };
   }
+}
+
+export async function deleteAppointmentAction(formData: FormData) {
+    const session = await getSession();
+    if (!session || !['admin', 'superadmin'].includes(session.role)) {
+      throw new Error('Unauthorized');
+    }
+  
+    const id = formData.get('id') as string;
+    if (!id) {
+      throw new Error('Appointment ID is required');
+    }
+  
+    try {
+      await deleteAppointment(id);
+      revalidatePath('/admin/appointments');
+      return { type: 'success', message: 'Appointment deleted successfully.' };
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
+      return { type: 'error', message: 'Failed to delete appointment.' };
+    }
 }

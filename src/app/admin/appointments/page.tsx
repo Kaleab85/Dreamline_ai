@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AppointmentFilters } from './_components/appointment-filters';
 import { cn } from '@/lib/utils';
+import { DeleteAppointmentButton } from './_components/delete-appointment-button';
 
 function formatServiceName(service: string) {
     if (!service) return 'N/A';
@@ -77,6 +78,7 @@ export default async function AdminAppointmentsPage({
                     <TableHead className="font-semibold">Preferred Date</TableHead>
                     <TableHead className="font-semibold">Status</TableHead>
                     <TableHead className="font-semibold">Message</TableHead>
+                    <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -98,11 +100,14 @@ export default async function AdminAppointmentsPage({
                            </Badge>
                         </TableCell>
                         <TableCell className="max-w-sm truncate">{appointment.message || 'N/A'}</TableCell>
+                        <TableCell className="text-right">
+                           <DeleteAppointmentButton appointmentId={appointment.id} />
+                        </TableCell>
                     </TableRow>
                     ))
                 ) : (
                     <TableRow>
-                        <TableCell colSpan={5} className="h-48 text-center">
+                        <TableCell colSpan={6} className="h-48 text-center">
                             <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                                 <Inbox className="h-12 w-12" />
                                 <h3 className="text-xl font-semibold">No appointments found</h3>

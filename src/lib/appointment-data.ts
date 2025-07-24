@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, query, where, doc, deleteDoc } from 'firebase/firestore';
 
 export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed';
 
@@ -39,4 +39,9 @@ export async function addAppointment(appointmentData: Omit<Appointment, 'id' | '
         status: 'Pending',
     };
     await addDoc(collection(db, "appointments"), newAppointment);
+}
+
+export async function deleteAppointment(id: string): Promise<void> {
+    const appointmentRef = doc(db, 'appointments', id);
+    await deleteDoc(appointmentRef);
 }
