@@ -45,7 +45,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all admin routes and the login page, but not the setup page
-  // explicitly, as it has its own logic.
+  // Match all admin routes and the login page
   matcher: ['/admin/:path*', '/login'],
 };

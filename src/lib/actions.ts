@@ -152,6 +152,11 @@ const blogTagSchema = z.object({
 });
 
 export async function generateTagsAction(prevState: any, formData: FormData) {
+    const session = await getSession();
+    if (!session) {
+      return { type: 'error', message: 'Unauthorized', tags: [] };
+    }
+
     const content = formData.get('content') as string;
     const validatedFields = blogTagSchema.safeParse({ content });
 
@@ -282,13 +287,8 @@ export async function setupSuperAdminAction(prevState: any, formData: FormData) 
     const { email, password } = validatedFields.data;
   
     try {
-      await addUser({ email, password, role: 'superadmin' });
-      const newUser = await getUserByEmail(email);
-      if (newUser) {
-          await createSession(newUser.id, 'superadmin');
-      } else {
-         throw new Error('Failed to retrieve new user after creation.');
-      }
+      const newUserId = await addUser({ email, password, role: 'superadmin' });
+      await createSession(newUserId, 'superadmin');
     } catch (e) {
       console.error(e);
       return {

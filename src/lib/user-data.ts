@@ -38,6 +38,7 @@ export async function getUserById(id: string): Promise<User | undefined> {
     return { id: userDocSnap.id, ...userDocSnap.data() } as User;
 }
 
-export async function addUser(userData: Omit<User, 'id'>) {
-    await addDoc(usersCol, userData);
+export async function addUser(userData: Omit<User, 'id'>): Promise<string> {
+    const docRef = await addDoc(usersCol, userData);
+    return docRef.id;
 }
