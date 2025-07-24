@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
 import { addAppointment, deleteAppointment } from './appointment-data';
 import { redirect } from 'next/navigation';
-import { addUser, getUserByEmail } from './user-data';
+import { addUser, getUserByEmail, getUsers } from './user-data';
 import { db } from './firebase'; 
 import { collection, addDoc } from 'firebase/firestore';
 import { SignJWT } from 'jose';
@@ -252,3 +252,39 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
     };
   }
 }
+
+export async function setupSuperAdminAction(prevState: any, formData: FormData) {
+    const users = await getUsers();
+    if (users.length > 0) {
+      return {
+        type: 'error',
+        message: 'A superadmin already exists.',
+      };
+    }
+  
+    const validatedFields = registerAdminSchema.safeParse(Object.fromEntries(formData.entries()));
+  
+    if (!validatedFields.success) {
+      return {
+        type: 'error',
+        errors: validatedFields.error.flatten().fieldErrors,
+      };
+    }
+  
+    const { email, password } = validatedFields.data;
+  
+    try {
+      await addUser({ email, password, role: 'superadmin' });
+      const newUser = await getUserByEmail(email);
+      if (newUser) {
+          await createSession(newUser.id, 'superadmin');
+      }
+      redirect('/admin/appointments');
+    } catch (e) {
+      console.error(e);
+      return {
+        type: 'error',
+        message: 'Something went wrong during setup. Please try again.',
+      };
+    }
+  }
