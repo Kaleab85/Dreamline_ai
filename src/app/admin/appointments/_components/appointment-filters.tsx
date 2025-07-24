@@ -4,6 +4,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
+import { Suspense } from 'react';
 
 const services = [
   { value: 'educational-consultation', label: 'Educational Consultation' },
@@ -14,7 +15,7 @@ const services = [
 
 const statuses = ['Pending', 'Confirmed', 'Completed'];
 
-export function AppointmentFilters() {
+function Filters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,7 +35,7 @@ export function AppointmentFilters() {
     const search = current.toString();
     const query = search ? `?${search}` : '';
 
-    router.replace(`${pathname}${query}`);
+    router.replace(`${pathname}${query}`, { scroll: false });
   };
 
   return (
@@ -77,4 +78,13 @@ export function AppointmentFilters() {
         </CardContent>
     </Card>
   );
+}
+
+
+export function AppointmentFilters() {
+    return (
+        <Suspense fallback={<div>Loading filters...</div>}>
+            <Filters />
+        </Suspense>
+    )
 }
