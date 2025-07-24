@@ -14,7 +14,6 @@ async function initializeSuperAdmin() {
     const q = query(usersCol, where("role", "==", "superadmin"));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
-        console.log("No superadmin found, creating one.");
         await addDoc(usersCol, {
             email: 'admin@example.com',
             password: 'password', // Don't do this in production!

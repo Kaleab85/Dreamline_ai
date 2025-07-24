@@ -41,8 +41,8 @@ export async function bookAppointment(prevState: any, formData: FormData) {
   try {
     await addAppointment(validatedFields.data);
     
-    // Revalidate the admin page to show the new appointment
-    revalidatePath('/admin/appointments');
+    // The admin page will show new appointments on refresh.
+    // No revalidation needed here for the public user.
     
     return { type: 'success', message: 'Appointment booked successfully! We will be in touch soon.' };
   } catch (e) {
