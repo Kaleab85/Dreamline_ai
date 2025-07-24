@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from './ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader } from './ui/sheet';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
@@ -42,7 +42,7 @@ export function Header() {
             ))}
           </nav>
         </div>
-        <div className="flex items-center justify-end flex-1">
+        <div className="flex items-center justify-end flex-1 md:flex-none">
           <Button asChild className="hidden md:inline-flex">
             <Link href="/book-appointment">Book Appointment</Link>
           </Button>
@@ -53,13 +53,12 @@ export function Header() {
                 <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left">
-              <SheetHeader>
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <SheetContent side="left" className="p-0">
+              <SheetHeader className="p-4 border-b">
+                 <Logo onClick={() => setIsMobileMenuOpen(false)} />
               </SheetHeader>
               <div className="flex flex-col p-4">
-                <Logo onClick={() => setIsMobileMenuOpen(false)} />
-                <nav className="grid gap-4 mt-8 text-lg">
+                <nav className="grid gap-4 text-lg">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}

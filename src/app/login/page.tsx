@@ -29,7 +29,7 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] bg-secondary">
+    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] bg-secondary p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Admin Login</CardTitle>
