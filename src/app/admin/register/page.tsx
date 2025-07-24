@@ -1,4 +1,5 @@
-import { getSession } from '@/lib/auth';
+
+import { getSession } from '@/lib/actions';
 import { redirect } from 'next/navigation';
 import { RegisterAdminForm } from './_components/register-admin-form';
 import {

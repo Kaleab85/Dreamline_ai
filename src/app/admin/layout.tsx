@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSession, SessionPayload } from '@/lib/auth';
+import { getSession } from '@/lib/actions';
+import type { SessionPayload } from '@/lib/session';
 import { User, getUserById } from '@/lib/user-data';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { LogOut, UserCircle2 } from 'lucide-react';

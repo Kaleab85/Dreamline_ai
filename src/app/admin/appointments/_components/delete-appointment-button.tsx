@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -14,8 +15,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { deleteAppointmentAction } from '@/lib/actions';
 import { Trash2 } from 'lucide-react';
-import { useFormStatus } from 'react-dom';
+import { useFormStatus, useActionState } from 'react-dom';
 import { toast } from '@/hooks/use-toast';
+import { useEffect } from 'react';
 
 function DeleteButton() {
   const { pending } = useFormStatus();
@@ -28,23 +30,29 @@ function DeleteButton() {
   );
 }
 
-export function DeleteAppointmentButton({ appointmentId }: { appointmentId: string }) {
+const initialState = {
+  type: null,
+  message: '',
+};
 
-  const handleDelete = async (formData: FormData) => {
-    const result = await deleteAppointmentAction(formData);
-    if(result.type === 'success') {
+export function DeleteAppointmentButton({ appointmentId }: { appointmentId: string }) {
+  const [state, formAction] = useActionState(deleteAppointmentAction, initialState);
+
+  useEffect(() => {
+    if (state.type === 'success' && state.message) {
       toast({
         title: 'Success',
-        description: result.message,
+        description: state.message,
       })
-    } else {
+    } else if (state.type === 'error' && state.message) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: result.message,
+        description: state.message,
       })
     }
-  }
+  },[state]);
+
 
   return (
     <AlertDialog>
@@ -61,13 +69,13 @@ export function DeleteAppointmentButton({ appointmentId }: { appointmentId: stri
             This action cannot be undone. This will permanently delete the appointment from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <form action={handleDelete}>
-            <input type="hidden" name="id" value={appointmentId} />
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <DeleteButton />
-          </form>
-        </AlertDialogFooter>
+        <form action={formAction}>
+            <AlertDialogFooter>
+                <input type="hidden" name="id" value={appointmentId} />
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <DeleteButton />
+            </AlertDialogFooter>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );

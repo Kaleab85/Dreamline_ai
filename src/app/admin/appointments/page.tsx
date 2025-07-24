@@ -1,4 +1,5 @@
 
+import { getSession } from '@/lib/actions';
 import {
   Card,
   CardContent,
@@ -7,7 +8,6 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { CalendarDays, UserPlus } from 'lucide-react';
-import { getSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AppointmentFilters } from './_components/appointment-filters';

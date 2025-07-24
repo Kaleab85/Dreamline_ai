@@ -3,13 +3,61 @@
 
 import { z } from 'zod';
 import { generateBlogPostTags } from '@/ai/flows/generate-blog-post-tags';
-import { revalidatePath } from 'next/cache';
 import { addAppointment, deleteAppointment } from './appointment-data';
-import { createSession, deleteSession, getSession } from './auth';
 import { redirect } from 'next/navigation';
 import { addUser, getUserByEmail } from './user-data';
 import { db } from './firebase'; 
 import { collection, addDoc } from 'firebase/firestore';
+import { SignJWT } from 'jose';
+import { cookies } from 'next/headers';
+import type { SessionPayload } from './session';
+import { decrypt } from './auth';
+
+// --- SESSION ACTIONS ---
+
+const secretKey = process.env.JWT_SECRET_KEY || 'your-secret-key-that-is-long-enough';
+const encodedKey = new TextEncoder().encode(secretKey);
+const cookieName = 'session';
+
+async function encrypt(payload: SessionPayload) {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(encodedKey);
+}
+
+export async function createSession(userId: string, role: 'superadmin' | 'admin') {
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const session = await encrypt({ userId, role, expiresAt });
+
+  cookies().set(cookieName, session, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAt,
+    sameSite: 'lax',
+    path: '/',
+  });
+}
+
+export async function getSession() {
+  const cookie = cookies().get(cookieName)?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.userId) {
+    return null;
+  }
+
+  return session;
+}
+
+export async function deleteSession() {
+  cookies().delete(cookieName);
+  redirect('/login');
+}
+
+
+// --- APPOINTMENT ACTIONS ---
 
 const appointmentSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,17 +88,34 @@ export async function bookAppointment(prevState: any, formData: FormData) {
 
   try {
     await addAppointment(validatedFields.data);
-    
-    // The admin page will show new appointments on refresh.
-    // No revalidation needed here for the public user.
-    
     return { type: 'success', message: 'Appointment booked successfully! We will be in touch soon.' };
   } catch (e) {
-    console.error(e);
     return { type: 'error', message: 'Something went wrong. Please try again.' };
   }
 }
 
+export async function deleteAppointmentAction(prevState: any, formData: FormData) {
+    const session = await getSession();
+    if (!session || !['admin', 'superadmin'].includes(session.role)) {
+      return { type: 'error', message: 'Unauthorized' };
+    }
+  
+    const id = formData.get('id') as string;
+    if (!id) {
+       return { type: 'error', message: 'Appointment ID is required' };
+    }
+  
+    try {
+      await deleteAppointment(id);
+      return { type: 'success', message: 'Appointment deleted successfully.' };
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
+      return { type: 'error', message: 'Failed to delete appointment.' };
+    }
+}
+
+
+// --- CONTACT FORM ACTION ---
 
 const contactSchema = z.object({
     name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -80,6 +145,7 @@ export async function submitContactForm(prevState: any, formData: FormData) {
     }
 }
 
+// --- AI ACTIONS ---
 
 const blogTagSchema = z.object({
     content: z.string().min(100, { message: 'Blog content must be at least 100 characters to generate tags.' }),
@@ -115,6 +181,8 @@ export async function generateTagsAction(prevState: any, formData: FormData) {
     }
 }
 
+// --- AUTH/USER ACTIONS ---
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
@@ -129,7 +197,6 @@ export async function loginAction(prevState: any, formData: FormData) {
     return { message: 'Invalid email or password' };
   }
   
-  // In a real app, you'd compare a hashed password
   await createSession(user.id, user.role);
   redirect('/admin/appointments');
 }
@@ -163,7 +230,6 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
   
   const { email, password } = validatedFields.data;
 
-  // Check if user already exists
   if (await getUserByEmail(email)) {
     return {
       type: 'error',
@@ -172,7 +238,6 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
   }
 
   try {
-    // Add the new user with 'admin' role. In a real app, you'd hash the password.
     await addUser({ email, password, role: 'admin' });
     
     return {
@@ -186,25 +251,4 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
       message: 'Something went wrong during registration. Please try again.',
     };
   }
-}
-
-export async function deleteAppointmentAction(formData: FormData) {
-    const session = await getSession();
-    if (!session || !['admin', 'superadmin'].includes(session.role)) {
-      throw new Error('Unauthorized');
-    }
-  
-    const id = formData.get('id') as string;
-    if (!id) {
-      throw new Error('Appointment ID is required');
-    }
-  
-    try {
-      await deleteAppointment(id);
-      revalidatePath('/admin/appointments');
-      return { type: 'success', message: 'Appointment deleted successfully.' };
-    } catch (error) {
-      console.error('Failed to delete appointment:', error);
-      return { type: 'error', message: 'Failed to delete appointment.' };
-    }
 }
