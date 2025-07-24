@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, query, where, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc, query, where } from 'firebase/firestore';
 
 export interface User {
   id: string;
@@ -9,23 +9,6 @@ export interface User {
 }
 
 const usersCol = collection(db, 'users');
-
-async function initializeSuperAdmin() {
-    const q = query(usersCol, where("role", "==", "superadmin"));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-        console.log('No superadmin found, creating one...');
-        await addDoc(usersCol, {
-            email: 'admin@example.com',
-            password: 'password', // Don't do this in production!
-            role: 'superadmin',
-        });
-    }
-}
-
-// Ensure the superadmin exists when the module is first loaded on the server.
-initializeSuperAdmin().catch(console.error);
-
 
 export async function getUsers(): Promise<User[]> {
   const userSnapshot = await getDocs(usersCol);
