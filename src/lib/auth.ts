@@ -1,3 +1,4 @@
+
 import 'server-only';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
@@ -7,7 +8,7 @@ const secretKey = process.env.JWT_SECRET_KEY || 'your-secret-key-that-is-long-en
 const encodedKey = new TextEncoder().encode(secretKey);
 const cookieName = 'session';
 
-interface SessionPayload {
+export interface SessionPayload {
   userId: string;
   role: 'superadmin' | 'admin';
   expiresAt: Date;
@@ -28,7 +29,7 @@ export async function decrypt(session: string | undefined = '') {
     });
     return payload as SessionPayload;
   } catch (error) {
-    console.log('Failed to verify session');
+    
     return null;
   }
 }
