@@ -189,12 +189,20 @@ const loginSchema = z.object({
 });
 
 export async function loginAction(prevState: any, formData: FormData) {
-  const { email, password } = loginSchema.parse(Object.fromEntries(formData.entries()));
+  const validatedFields = loginSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (!validatedFields.success) {
+      return { message: 'Invalid form data.' };
+  }
+
+  const { email, password } = validatedFields.data;
 
   const user = await getUserByEmail(email);
 
   if (!user || user.password !== password) {
-    return { message: 'Invalid email or password' };
+    return { message: 'Invalid email or password.' };
   }
   
   await createSession(user.id, user.role);
@@ -254,7 +262,7 @@ export async function registerAdminAction(prevState: any, formData: FormData) {
 }
 
 export async function setupSuperAdminAction(prevState: any, formData: FormData) {
-    const users = await getUsers();
+    const users = await getUsers({ limit: 1 });
     if (users.length > 0) {
       return {
         type: 'error',
