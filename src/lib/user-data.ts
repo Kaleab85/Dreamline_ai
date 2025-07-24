@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, getDocs, addDoc, doc, getDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc, query, where, limit } from 'firebase/firestore';
 
 export interface User {
   id: string;
@@ -10,9 +10,10 @@ export interface User {
 
 const usersCol = collection(db, 'users');
 
-export async function getUsers(): Promise<User[]> {
-  const userSnapshot = await getDocs(usersCol);
-  return userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
+export async function getUsers(options: { limit: number } = { limit: 100 }): Promise<User[]> {
+    const q = query(usersCol, limit(options.limit));
+    const userSnapshot = await getDocs(q);
+    return userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
 }
 
 export async function getUserByEmail(email: string): Promise<User | undefined> {

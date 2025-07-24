@@ -5,34 +5,41 @@ import { getSession } from './lib/actions';
 import { getUsers } from './lib/user-data';
 
 export async function middleware(request: NextRequest) {
-  const users = await getUsers();
+  // Check if any user exists to determine if setup is needed.
+  // We only need to check for one user.
+  const users = await getUsers({ limit: 1 });
   const isSetupRequired = users.length === 0;
+  const { pathname } = request.nextUrl;
 
-  // If no users exist, redirect everything to the setup page
-  if (isSetupRequired && !request.nextUrl.pathname.startsWith('/admin/setup')) {
+  // If setup is required and the user is not on the setup page, redirect them.
+  if (isSetupRequired && pathname !== '/admin/setup') {
     return NextResponse.redirect(new URL('/admin/setup', request.url));
   }
-  
-  // If setup is done, but user tries to access setup page, redirect to login
-  if (!isSetupRequired && request.nextUrl.pathname.startsWith('/admin/setup')) {
+
+  // If setup is complete and the user tries to access the setup page, redirect to login.
+  if (!isSetupRequired && pathname === '/admin/setup') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-
-  // Allow access to setup page if it's required
-  if (request.nextUrl.pathname.startsWith('/admin/setup')) {
+  
+  // If the current path is the setup page, allow access.
+  if (pathname === '/admin/setup') {
     return NextResponse.next();
   }
-
-  const session = await getSession();
-
-  // If there's no session and the user is trying to access a protected route, redirect to login
-  if (!session && request.nextUrl.pathname.startsWith('/admin')) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
   
-  // If there is a session and the user is on the login page, redirect to admin
-  if (session && request.nextUrl.pathname.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/admin/appointments', request.url));
+  // Protect all other admin routes
+  if (pathname.startsWith('/admin')) {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
+
+  // If user is logged in and tries to access login page, redirect to admin dashboard
+  if (pathname.startsWith('/login')) {
+      const session = await getSession();
+      if (session) {
+          return NextResponse.redirect(new URL('/admin/appointments', request.url));
+      }
   }
 
   return NextResponse.next();
