@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
 
 export interface User {
   id: string;
@@ -14,6 +14,7 @@ async function initializeSuperAdmin() {
     const q = query(usersCol, where("role", "==", "superadmin"));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
+        console.log('No superadmin found, creating one...');
         await addDoc(usersCol, {
             email: 'admin@example.com',
             password: 'password', // Don't do this in production!
@@ -42,17 +43,15 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
-    const q = query(usersCol, where("__name__", "==", id));
-    const querySnapshot = await getDocs(q);
-     if (querySnapshot.empty) {
-        // This is a workaround to get the document by ID from a client component
-        // In a real app, you would use getDoc(doc(db, 'users', id)))
-        const allUsers = await getUsers();
-        return allUsers.find(u => u.id === id);
+    const userDocRef = doc(db, 'users', id);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (!userDocSnap.exists()) {
+        console.warn(`Could not find user with id: ${id}`);
+        return undefined;
     }
-    const doc = querySnapshot.docs[0];
-    if(!doc) return undefined;
-    return { id: doc.id, ...doc.data() } as User;
+
+    return { id: userDocSnap.id, ...userDocSnap.data() } as User;
 }
 
 export async function addUser(userData: Omit<User, 'id'>) {
