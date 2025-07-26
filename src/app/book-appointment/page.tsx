@@ -14,8 +14,7 @@ import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 const initialState = {
-  type: null,
-  errors: null,
+  type: 'idle',
   message: '',
 };
 
@@ -65,18 +64,18 @@ export default function BookAppointmentPage() {
                 <div>
                   <Label htmlFor="name">Full Name</Label>
                   <Input id="name" name="name" placeholder="Your Name" />
-                  {state.errors?.name && <p className="text-sm text-destructive mt-1">{state.errors.name[0]}</p>}
+                  {state.type === 'error' && 'errors' in state && (state as any).errors?.name && <p className="text-sm text-destructive mt-1">{(state as any).errors.name[0]}</p>}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="email">Email Address</Label>
                     <Input id="email" name="email" type="email" placeholder="you@example.com" />
-                    {state.errors?.email && <p className="text-sm text-destructive mt-1">{state.errors.email[0]}</p>}
+                    {state.type === 'error' && 'errors' in state && (state as any).errors?.email && <p className="text-sm text-destructive mt-1">{(state as any).errors.email[0]}</p>}
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone Number</Label>
                     <Input id="phone" name="phone" type="tel" placeholder="(123) 456-7890" />
-                    {state.errors?.phone && <p className="text-sm text-destructive mt-1">{state.errors.phone[0]}</p>}
+                    {state.type === 'error' && 'errors' in state && (state as any).errors?.phone && <p className="text-sm text-destructive mt-1">{(state as any).errors.phone[0]}</p>}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -93,12 +92,12 @@ export default function BookAppointmentPage() {
                         <SelectItem value="general-inquiry">General Inquiry</SelectItem>
                       </SelectContent>
                     </Select>
-                     {state.errors?.service && <p className="text-sm text-destructive mt-1">{state.errors.service[0]}</p>}
+                     {state.type === 'error' && 'errors' in state && (state as any).errors?.service && <p className="text-sm text-destructive mt-1">{(state as any).errors.service[0]}</p>}
                   </div>
                   <div>
                     <Label htmlFor="date">Preferred Date</Label>
                     <Input id="date" name="date" type="date" />
-                     {state.errors?.date && <p className="text-sm text-destructive mt-1">{state.errors.date[0]}</p>}
+                     {state.type === 'error' && 'errors' in state && (state as any).errors?.date && <p className="text-sm text-destructive mt-1">{(state as any).errors.date[0]}</p>}
                   </div>
                 </div>
                 <div>

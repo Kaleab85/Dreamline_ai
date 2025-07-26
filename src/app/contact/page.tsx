@@ -13,8 +13,7 @@ import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 const initialState = {
-  type: null,
-  errors: null,
+  type: 'idle',
   message: '',
 };
 
@@ -92,22 +91,22 @@ export default function ContactPage() {
                 <div>
                   <Label htmlFor="name">Full Name</Label>
                   <Input id="name" name="name" placeholder="John Doe" />
-                  {state.errors?.name && <p className="text-sm text-destructive mt-1">{state.errors.name[0]}</p>}
+                  {state.type === 'error' && 'errors' in state && (state as any).errors?.name && <p className="text-sm text-destructive mt-1">{(state as any).errors.name[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" name="email" type="email" placeholder="john.doe@example.com" />
-                  {state.errors?.email && <p className="text-sm text-destructive mt-1">{state.errors.email[0]}</p>}
+                  {state.type === 'error' && 'errors' in state && (state as any).errors?.email && <p className="text-sm text-destructive mt-1">{(state as any).errors.email[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="subject">Subject</Label>
                   <Input id="subject" name="subject" placeholder="Question about services" />
-                  {state.errors?.subject && <p className="text-sm text-destructive mt-1">{state.errors.subject[0]}</p>}
+                  {state.type === 'error' && 'errors' in state && (state as any).errors?.subject && <p className="text-sm text-destructive mt-1">{(state as any).errors.subject[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="message">Message</Label>
                   <Textarea id="message" name="message" rows={5} placeholder="Your message here..." />
-                  {state.errors?.message && <p className="text-sm text-destructive mt-1">{state.errors.message[0]}</p>}
+                  {state.type === 'error' && 'errors' in state && (state as any).errors?.message && <p className="text-sm text-destructive mt-1">{(state as any).errors.message[0]}</p>}
                 </div>
                 <SubmitButton />
               </form>
