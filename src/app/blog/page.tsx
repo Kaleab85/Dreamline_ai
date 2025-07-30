@@ -51,15 +51,6 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
-       <section className="py-12 text-center">
-        <div className="container">
-          <h2 className="text-2xl font-headline font-bold">Generate Tags for your Post</h2>
-          <p className="text-muted-foreground mt-2">Use our AI tool to get SEO-optimized tags for your content.</p>
-          <Button asChild size="lg" className="mt-4">
-            <Link href="/blog/new">Try AI Tag Generator</Link>
-          </Button>
-        </div>
-      </section>
     </div>
   );
 }
