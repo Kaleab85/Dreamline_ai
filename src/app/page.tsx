@@ -39,9 +39,13 @@ export default function Home() {
                 src="https://placehold.co/600x400.png"
                 width="600"
                 height="400"
-                alt="Hero"
+                alt="Hero - Happy students outdoors"
                 data-ai-hint="happy students outdoors"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               />
             </div>
           </div>
@@ -105,9 +109,11 @@ export default function Home() {
                 src="https://placehold.co/600x400.png"
                 width="600"
                 height="400"
-                alt="About Us"
+                alt="About Us - Diverse team meeting"
                 data-ai-hint="diverse team meeting"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               />
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
@@ -147,6 +153,8 @@ export default function Home() {
                       alt={post.title}
                       data-ai-hint={post.aiHint}
                       className="aspect-video object-cover w-full group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
                     />
                   </Link>
                   <CardContent className="p-6">

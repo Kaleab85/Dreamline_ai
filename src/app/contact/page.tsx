@@ -4,6 +4,10 @@ import { useFormStatus } from 'react-dom';
 import { useActionState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from '@/lib/actions';
+
+// 1. IMPORT FormState from your actions file
+import type { FormState } from '@/lib/actions'; // Use 'type' import for interfaces
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,9 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-const initialState = {
+// 2. Update initialState to match the FormState interface
+const initialState: FormState = {
   type: 'idle',
   message: '',
+  errors: undefined, // Explicitly include errors as undefined initially
 };
 
 function SubmitButton() {
@@ -29,6 +35,7 @@ function SubmitButton() {
 }
 
 export default function ContactPage() {
+  // TypeScript will now correctly infer `state` as `FormState` because `initialState` is typed
   const [state, formAction] = useActionState(submitContactForm, initialState);
   const { toast } = useToast();
 
@@ -38,6 +45,9 @@ export default function ContactPage() {
         title: "Success!",
         description: state.message,
       });
+      // Optionally reset form here if needed, but Server Actions often handle this.
+      // If you need to clear inputs on success, you might add a ref to the form
+      // and call formRef.current?.reset();
     } else if (state.type === 'error' && state.message) {
       toast({
         variant: "destructive",
@@ -91,22 +101,23 @@ export default function ContactPage() {
                 <div>
                   <Label htmlFor="name">Full Name</Label>
                   <Input id="name" name="name" placeholder="John Doe" />
-                  {state.type === 'error' && 'errors' in state && (state as any).errors?.name && <p className="text-sm text-destructive mt-1">{(state as any).errors.name[0]}</p>}
+                  {/* Now 'state.errors?.name' will be correctly typed */}
+                  {state.type === 'error' && state.errors?.name && <p className="text-sm text-destructive mt-1">{state.errors.name[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" name="email" type="email" placeholder="john.doe@example.com" />
-                  {state.type === 'error' && 'errors' in state && (state as any).errors?.email && <p className="text-sm text-destructive mt-1">{(state as any).errors.email[0]}</p>}
+                  {state.type === 'error' && state.errors?.email && <p className="text-sm text-destructive mt-1">{state.errors.email[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="subject">Subject</Label>
                   <Input id="subject" name="subject" placeholder="Question about services" />
-                  {state.type === 'error' && 'errors' in state && (state as any).errors?.subject && <p className="text-sm text-destructive mt-1">{(state as any).errors.subject[0]}</p>}
+                  {state.type === 'error' && state.errors?.subject && <p className="text-sm text-destructive mt-1">{state.errors.subject[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="message">Message</Label>
                   <Textarea id="message" name="message" rows={5} placeholder="Your message here..." />
-                  {state.type === 'error' && 'errors' in state && (state as any).errors?.message && <p className="text-sm text-destructive mt-1">{(state as any).errors.message[0]}</p>}
+                  {state.type === 'error' && state.errors?.message && <p className="text-sm text-destructive mt-1">{state.errors.message[0]}</p>}
                 </div>
                 <SubmitButton />
               </form>

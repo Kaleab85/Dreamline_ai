@@ -4,4 +4,10 @@
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
-  maxInstances: 1
+  maxInstances: 3
+  # Minimum instances to keep warm
+  minInstances: 0
+  # Memory allocation
+  memory: 1GiB
+  # CPU allocation
+  cpu: 1
