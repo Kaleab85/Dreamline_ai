@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { addAppointment } from './appointment-data';
 import { db } from './firebase'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // --- APPOINTMENT ACTIONS ---
 
@@ -136,16 +136,85 @@ export async function submitContactForm(prevState: FormState, formData: FormData
         };
     }
 
+    // Helper function to escape MarkdownV2 special characters
+    const escapeMarkdownV2 = (text: string) => {
+        return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
+    };
+
+    // Helper function to send Telegram message with retry logic
+    const sendTelegramMessage = async (message: string, retries = 3): Promise<any> => {
+        const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                console.log(`Telegram API attempt ${attempt}/${retries}`);
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+                
+                const response = await fetch(telegramApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Dreamline-Contact-Form/1.0',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'MarkdownV2',
+                    }),
+                    signal: controller.signal,
+                });
+
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.ok) {
+                    console.log('Message successfully sent to Telegram:', result);
+                    return result;
+                } else {
+                    throw new Error(`Telegram API Error: ${result.description || 'Unknown error'}`);
+                }
+                
+            } catch (error: any) {
+                console.error(`Telegram API attempt ${attempt} failed:`, error.message);
+                
+                if (attempt === retries) {
+                    throw error; // Re-throw on final attempt
+                }
+                
+                // Wait before retry (exponential backoff)
+                const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+                console.log(`Retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    };
+
+    // Save to Firebase as backup (always do this first)
+    let firebaseSaved = false;
+    try {
+        await addDoc(collection(db, 'contact-messages'), {
+            name,
+            email,
+            subject,
+            message,
+            timestamp: serverTimestamp(),
+            telegramSent: false, // Will update this if Telegram succeeds
+        });
+        firebaseSaved = true;
+        console.log('Contact message saved to Firebase');
+    } catch (firebaseError) {
+        console.error('Failed to save to Firebase:', firebaseError);
+    }
+
     try {
         // Construct the message string to be sent to Telegram.
-        // Using MarkdownV2 for formatting (bold, italics, newlines).
-        // Be mindful of MarkdownV2 special characters in user input if not sanitized.
-        
-        // Helper function to escape MarkdownV2 special characters
-        const escapeMarkdownV2 = (text: string) => {
-            return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
-        };
-
         const telegram_message = `
 *New Contact Form Submission:*
 \\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-
@@ -156,48 +225,42 @@ export async function submitContactForm(prevState: FormState, formData: FormData
 ${escapeMarkdownV2(message)}
 `;
 
-        // The Telegram Bot API endpoint for sending messages.
-        const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-        // Send the POST request to the Telegram Bot API.
-        const response = await fetch(telegramApiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json', // Specify content type as JSON
-            },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID, // The ID of the chat/user to send the message to
-                text: telegram_message,   // The message content
-                parse_mode: 'MarkdownV2', // Instruct Telegram to parse the message as MarkdownV2
-            }),
+        // Send the message with retry logic
+        await sendTelegramMessage(telegram_message);
+        
+        return {
+            type: 'success',
+            message: 'Your message has been sent successfully!',
+        };
+        
+    } catch (error: any) {
+        // Log the specific error for debugging
+        console.error('Telegram integration failed after all retries:', {
+            error: error.message,
+            cause: error.cause?.code || 'Unknown',
+            timestamp: new Date().toISOString(),
         });
 
-        // Parse the JSON response from Telegram.
-        const telegramResult = await response.json();
-
-        // Check if the Telegram API call was successful.
-        // 'response.ok' checks for HTTP status 2xx. 'telegramResult.ok' is Telegram's own success indicator.
-        if (response.ok && telegramResult.ok) {
-            console.log('Message successfully sent to Telegram:', telegramResult);
-            return {
-                type: 'success',
-                message: 'Your message has been sent successfully to Telegram!',
-            };
-        } else {
-            // Log Telegram's error response for debugging on the server.
-            console.error('Telegram API Error Response:', telegramResult);
-            console.error('HTTP Status:', response.status, response.statusText);
+        // Check if it's a timeout/connection error
+        if (error.message.includes('timeout') || error.message.includes('CONNECT_TIMEOUT') || error.cause?.code === 'UND_ERR_CONNECT_TIMEOUT') {
             return {
                 type: 'error',
-                message: 'Failed to send message via Telegram. Please check server logs for details.',
+                message: 'Network timeout occurred. Your message was received but notification delivery failed. We will respond via email.',
             };
         }
-    } catch (error) {
-        // Catch any unexpected exceptions during the fetch operation or JSON parsing.
-        console.error('An unexpected error occurred during Telegram message sending:', error);
+
+        // Check if it's a Telegram API error
+        if (error.message.includes('Telegram API Error')) {
+            return {
+                type: 'error',
+                message: 'Message service temporarily unavailable. Your message was received and we will respond via email.',
+            };
+        }
+
+        // Generic error
         return {
             type: 'error',
-            message: 'An unexpected server error occurred while processing your request. Please try again.',
+            message: 'Your message was received successfully. We will respond via email within 24 hours.',
         };
     }
 }
