@@ -2,22 +2,16 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to appointments collection for authenticated users
+    // Allow client-side writes to appointments collection (for booking forms)
     match /appointments/{document} {
-      allow read, write: if true; // Adjust based on your auth requirements
+      allow create: if true; // Allow form submissions
+      allow read, update, delete: if false; // No client-side reads/updates for privacy
     }
     
-    // Allow write access to contact-messages (for contact form submissions)
-    // Only allow server-side writes, no client reads for privacy
+    // Allow client-side writes to contact-messages (for contact form submissions)
     match /contact-messages/{document} {
-      allow write: if true; // Server actions can write
-      allow read: if false; // No client-side reads for privacy
-    }
-    
-    // Allow read access to blog posts (public content)
-    match /blog-posts/{document} {
-      allow read: if true;
-      allow write: if false; // Only admin should write blog posts
+      allow create: if true; // Allow form submissions
+      allow read, update, delete: if false; // No client-side reads/updates for privacy
     }
     
     // Default: deny all other access

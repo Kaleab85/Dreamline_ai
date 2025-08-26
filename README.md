@@ -1,12 +1,12 @@
 # Dreamline Consultancy
 
-A Next.js application for educational consultancy services with appointment booking, contact forms, and blog functionality.
+A Next.js application for educational consultancy services with appointment booking and contact forms.
 
 ## Features
 
 - 📅 Appointment booking system
 - 📧 Contact form with Telegram integration
-- 📝 Blog/CMS functionality
+- 🌟 Success stories and testimonials
 - 🎨 Modern UI with Tailwind CSS and shadcn/ui
 - 🔥 Firebase integration
 

@@ -3,11 +3,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, BookOpen, Globe, Plane } from 'lucide-react';
-import { getBlogPosts } from '@/lib/blog-data';
+
 import { Logo } from '@/components/logo';
 
 export default function Home() {
-  const latestPosts = getBlogPosts().slice(0, 3);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -36,15 +35,12 @@ export default function Home() {
                 </div>
               </div>
               <Image
-                src="https://placehold.co/600x400.png"
+                src="/images/Hero.jpg"
                 width="600"
                 height="400"
-                alt="Hero - Happy students outdoors"
-                data-ai-hint="happy students outdoors"
+                alt="Dreamline Consultancy - Your pathway to global education"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
                 priority
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               />
             </div>
@@ -106,11 +102,10 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
               <Image
-                src="https://placehold.co/600x400.png"
+                src="/images/About.jpg"
                 width="600"
                 height="400"
-                alt="About Us - Diverse team meeting"
-                data-ai-hint="diverse team meeting"
+                alt="About Dreamline Consultancy - Professional education consultants"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
                 loading="lazy"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
@@ -130,48 +125,88 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Blog Section */}
-        <section id="blog" className="w-full py-12 md:py-24 lg:py-32">
+        {/* Success Stories Section */}
+        <section id="success-stories" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Our Blog</div>
-                <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">Insights and Advice</h2>
+                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Success Stories</div>
+                <h2 className="text-3xl font-headline font-bold tracking-tighter sm:text-5xl">Our Students' Achievements</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Stay updated with the latest tips on scholarships, studying abroad, and immigration news from our experts.
+                  Hear from students who have successfully achieved their dreams of studying abroad with our guidance and support.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 lg:max-w-none mt-12">
-              {latestPosts.map((post) => (
-                <Card key={post.slug} className="overflow-hidden group">
-                  <Link href={`/blog/${post.slug}`}>
-                    <Image
-                      src={post.image}
-                      width="400"
-                      height="225"
-                      alt={post.title}
-                      data-ai-hint={post.aiHint}
-                      className="aspect-video object-cover w-full group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                    />
-                  </Link>
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-headline font-bold">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{post.excerpt}</p>
-                    <Button asChild variant="link" className="px-0 mt-4">
-                      <Link href={`/blog/${post.slug}`}>Read More <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+              <Card className="overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">A</span>
+                    </div>
+                    <div>
+                      <h3 className="font-headline font-bold">Abebe Tadesse</h3>
+                      <p className="text-sm text-muted-foreground">University of Toronto, Canada</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Dreamline Consultancy made my dream of studying computer science in Canada a reality. Their guidance through the visa process was invaluable."
+                  </p>
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">M</span>
+                    </div>
+                    <div>
+                      <h3 className="font-headline font-bold">Meron Bekele</h3>
+                      <p className="text-sm text-muted-foreground">Oxford University, UK</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "The team helped me secure a scholarship for my Master's degree. Their expertise in international education is unmatched."
+                  </p>
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">D</span>
+                    </div>
+                    <div>
+                      <h3 className="font-headline font-bold">Daniel Haile</h3>
+                      <p className="text-sm text-muted-foreground">MIT, USA</p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "From application to arrival, Dreamline supported me every step of the way. Now I'm pursuing my PhD at MIT!"
+                  </p>
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
              <div className="text-center mt-12">
                <Button asChild size="lg" variant="outline">
-                 <Link href="/blog">View All Posts</Link>
+                 <Link href="/contact">Share Your Success Story</Link>
                </Button>
              </div>
           </div>

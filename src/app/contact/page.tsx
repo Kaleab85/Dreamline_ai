@@ -1,12 +1,8 @@
 'use client';
 
-import { useFormStatus } from 'react-dom';
-import { useActionState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { submitContactForm } from '@/lib/actions';
-
-// 1. IMPORT FormState from your actions file
-import type { FormState } from '@/lib/actions'; // Use 'type' import for interfaces
+import { submitContactFormClient, type ContactFormData, type ContactFormResult } from '@/lib/contact-client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -14,48 +10,53 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Loader2 } from 'lucide-react';
-import Link from 'next/link';
-
-// 2. Update initialState to match the FormState interface
-const initialState: FormState = {
-  type: 'idle',
-  message: '',
-  errors: undefined, // Explicitly include errors as undefined initially
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {pending ? 'Sending...' : 'Send Message'}
-    </Button>
-  );
-}
 
 export default function ContactPage() {
-  // TypeScript will now correctly infer `state` as `FormState` because `initialState` is typed
-  const [state, formAction] = useActionState(submitContactForm, initialState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<ContactFormResult['errors']>({});
+  const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (state.type === 'success') {
-      toast({
-        title: "Success!",
-        description: state.message,
-      });
-      // Optionally reset form here if needed, but Server Actions often handle this.
-      // If you need to clear inputs on success, you might add a ref to the form
-      // and call formRef.current?.reset();
-    } else if (state.type === 'error' && state.message) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrors({});
+
+    const formData = new FormData(e.currentTarget);
+    const data: ContactFormData = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      subject: formData.get('subject') as string,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const result = await submitContactFormClient(data);
+      
+      if (result.success) {
+        toast({
+          title: "Success!",
+          description: result.message,
+        });
+        formRef.current?.reset();
+      } else {
+        setErrors(result.errors || {});
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: result.message,
+        });
+      }
+    } catch (error) {
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: state.message,
+        title: "Error",
+        description: "Something went wrong. Please try again.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [state, toast]);
+  };
 
   return (
     <div className="bg-secondary">
@@ -77,15 +78,15 @@ export default function ContactPage() {
                 <CardContent className="space-y-4 text-lg">
                     <div className="flex items-start gap-4">
                         <MapPin className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
-                        <span>123 Education Lane, Knowledge City, 12345</span>
+                        <span>London Cafe, Hawassa, Ethiopia</span>
                     </div>
                     <div className="flex items-center gap-4">
                         <Mail className="h-6 w-6 text-primary flex-shrink-0" />
-                        <a href="mailto:contact@dreamline.com" className="hover:text-primary">contact@dreamline.com</a>
+                        <a href="mailto:dreamlineet@gmail.com" className="hover:text-primary">dreamlineet@gmail.com</a>
                     </div>
                     <div className="flex items-center gap-4">
                         <Phone className="h-6 w-6 text-primary flex-shrink-0" />
-                        <a href="tel:+1234567890" className="hover:text-primary">(123) 456-7890</a>
+                        <a href="tel:+251934107400" className="hover:text-primary">+251 934 107 400</a>
                     </div>
                 </CardContent>
             </Card>
@@ -97,29 +98,31 @@ export default function ContactPage() {
               <CardDescription>Fill out the form and we'll get back to you as soon as possible.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form action={formAction} className="space-y-4">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label htmlFor="name">Full Name</Label>
                   <Input id="name" name="name" placeholder="John Doe" />
-                  {/* Now 'state.errors?.name' will be correctly typed */}
-                  {state.type === 'error' && state.errors?.name && <p className="text-sm text-destructive mt-1">{state.errors.name[0]}</p>}
+                  {errors?.name && <p className="text-sm text-destructive mt-1">{errors.name[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" name="email" type="email" placeholder="john.doe@example.com" />
-                  {state.type === 'error' && state.errors?.email && <p className="text-sm text-destructive mt-1">{state.errors.email[0]}</p>}
+                  {errors?.email && <p className="text-sm text-destructive mt-1">{errors.email[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="subject">Subject</Label>
                   <Input id="subject" name="subject" placeholder="Question about services" />
-                  {state.type === 'error' && state.errors?.subject && <p className="text-sm text-destructive mt-1">{state.errors.subject[0]}</p>}
+                  {errors?.subject && <p className="text-sm text-destructive mt-1">{errors.subject[0]}</p>}
                 </div>
                 <div>
                   <Label htmlFor="message">Message</Label>
                   <Textarea id="message" name="message" rows={5} placeholder="Your message here..." />
-                  {state.type === 'error' && state.errors?.message && <p className="text-sm text-destructive mt-1">{state.errors.message[0]}</p>}
+                  {errors?.message && <p className="text-sm text-destructive mt-1">{errors.message[0]}</p>}
                 </div>
-                <SubmitButton />
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
               </form>
             </CardContent>
           </Card>

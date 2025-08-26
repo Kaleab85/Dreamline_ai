@@ -18,7 +18,6 @@ export function Footer() {
             <nav className="grid gap-2">
               <Link href="/about" className="hover:text-primary transition-colors">About Us</Link>
               <Link href="/services" className="hover:text-primary transition-colors">Services</Link>
-              <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
               <Link href="/contact" className="hover:text-primary transition-colors">Contact</Link>
               <Link href="/book-appointment" className="hover:text-primary transition-colors">Book Appointment</Link>
             </nav>
@@ -37,9 +36,9 @@ export function Footer() {
               </Link>
             </div>
             <div className="text-sm">
-              <p>123 Education Lane, Knowledge City, 12345</p>
-              <p>Email: <a href="mailto:contact@dreamline.com" className="hover:text-primary transition-colors">contact@dreamline.com</a></p>
-              <p>Phone: <a href="tel:+1234567890" className="hover:text-primary transition-colors">(123) 456-7890</a></p>
+              <p>London Cafe, Hawassa, Ethiopia</p>
+              <p>Email: <a href="mailto:dreamlineet@gmail.com" className="hover:text-primary transition-colors">dreamlineet@gmail.com</a></p>
+              <p>Phone: <a href="tel:+251934107400" className="hover:text-primary transition-colors">+251 934 107 400</a></p>
             </div>
           </div>
         </div>

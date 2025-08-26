@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader } from './ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from './ui/sheet';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
@@ -12,7 +12,6 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About Us' },
   { href: '/services', label: 'Services' },
-  { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -55,7 +54,8 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="p-0">
               <SheetHeader className="p-4 border-b">
-                 <Logo onClick={() => setIsMobileMenuOpen(false)} />
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <Logo onClick={() => setIsMobileMenuOpen(false)} />
               </SheetHeader>
               <div className="flex flex-col p-4">
                 <nav className="grid gap-4 text-lg">

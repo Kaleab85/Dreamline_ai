@@ -22,12 +22,12 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <Image
-                src="https://placehold.co/600x600.png"
+                src="/images/About.jpg"
                 width={600}
                 height={600}
-                alt="Our Team"
-                data-ai-hint="professional team photo"
+                alt="Dreamline Consultancy Team - Professional education consultants"
                 className="rounded-xl object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               />
             </div>
             <div className="space-y-8">
