@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   output: 'export', // Enable static export for shared hosting
   trailingSlash: true, // Add trailing slashes for better compatibility
   skipTrailingSlashRedirect: true,
+  // Disable dev indicator in production
+  devIndicators: {
+    buildActivity: false,
+    buildActivityPosition: 'bottom-right',
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -23,9 +28,9 @@ const nextConfig: NextConfig = {
     ],
   },
   // Enable experimental features for better performance
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-  },
+  // experimental: {
+  //   optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  // },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
