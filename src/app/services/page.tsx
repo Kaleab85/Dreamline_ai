@@ -22,11 +22,10 @@ export default function ServicesPage() {
           {/* Service 1: Educational Consultation */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <Image
-              src="https://placehold.co/600x400.png"
+              src="/images/service1.png"
               width={600}
               height={400}
               alt="Educational Consultation"
-              data-ai-hint="advisor student"
               className="rounded-xl object-cover"
             />
             <div className="space-y-4">
@@ -72,11 +71,10 @@ export default function ServicesPage() {
               </Button>
             </div>
             <Image
-              src="https://placehold.co/600x400.png"
+              src="/images/service2.png"
               width={600}
               height={400}
               alt="Visa Application"
-              data-ai-hint="visa stamping passport"
               className="rounded-xl object-cover"
             />
           </div>
@@ -84,11 +82,10 @@ export default function ServicesPage() {
           {/* Service 3: Travel Coordination */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <Image
-              src="https://placehold.co/600x400.png"
+              src="/images/service3.png"
               width={600}
               height={400}
               alt="Travel Coordination"
-              data-ai-hint="airplane window view"
               className="rounded-xl object-cover"
             />
             <div className="space-y-4">
