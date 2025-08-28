@@ -2,7 +2,7 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  output: 'export', // Enable static export for shared hosting
+  // output: 'export', // Disabled for dynamic features - Node.js hosting
   trailingSlash: true, // Add trailing slashes for better compatibility
   skipTrailingSlashRedirect: true,
   // Disable dev indicator in production
