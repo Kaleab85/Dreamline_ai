@@ -8,14 +8,13 @@ A Next.js application for educational consultancy services with appointment book
 - 📧 Contact form with Telegram integration
 - 🌟 Success stories and testimonials
 - 🎨 Modern UI with Tailwind CSS and shadcn/ui
-- 🔥 Firebase integration
+- 📱 Direct Telegram bot integration
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
-- Firebase CLI (for deployment)
+- Node.js 18+
 
 ### Local Development
 
@@ -27,9 +26,9 @@ A Next.js application for educational consultancy services with appointment book
 
 3. Set up environment variables:
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
-   Fill in your Telegram bot credentials in `.env.local`
+   Fill in your Telegram bot credentials in `.env`
 
 4. Run the development server:
    ```bash
@@ -44,7 +43,7 @@ A Next.js application for educational consultancy services with appointment book
 
 ### Deployment
 
-This project is configured for Firebase App Hosting. Make sure to set environment variables in the Firebase console before deploying.
+This project is configured for cPanel shared hosting with static export. The deployment is automated via Git integration.
 
 ## Tech Stack
 
@@ -52,5 +51,5 @@ This project is configured for Firebase App Hosting. Make sure to set environmen
 - TypeScript
 - Tailwind CSS
 - shadcn/ui
-- Firebase
+- Telegram Bot API
 - Zod validation

@@ -5,9 +5,9 @@
 - Homepage Hero: Hero section showcasing Dreamline Consultancy's logo, a compelling tagline, and a brief overview of their educational consulting services.
 - About Us: An 'About Us' section detailing the consultancy's mission, vision, and values, accompanied by relevant imagery.
 - Services Pages: Dedicated service pages outlining Educational Consultation, Visa Application Assistance, and Travel Coordination, each with clear calls to action.
-- Appointment Booking: An appointment booking form that saves collected form data using Firebase
-- Blog Page: Blog page which provides tips to the users via Firebase CMS. Articles will discuss scholarships, studying abroad, and immigration updates. The system incorporates an AI tool to auto-generate SEO-optimized tags for new blog posts, improving discoverability.
-- Contact Page: A contact page with a validated contact form, linked to Firebase, and complete with contact details and social media links.
+- Appointment Booking: An appointment booking form that sends data directly to Telegram
+- Blog Page: Blog page which provides tips to the users. Articles will discuss scholarships, studying abroad, and immigration updates.
+- Contact Page: A contact page with a validated contact form, integrated with Telegram bot, and complete with contact details and social media links.
 
 ## Style Guidelines:
 

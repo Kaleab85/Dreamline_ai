@@ -3,7 +3,7 @@ import './globals.css';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster";
-import { PerformanceMonitor } from '@/components/performance-monitor';
+
 
 export const metadata: Metadata = {
   title: 'Dreamline Consultancy',
