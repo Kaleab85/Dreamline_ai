@@ -1,8 +1,5 @@
 'use client';
 
-import { db } from './firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 export interface AppointmentFormData {
   name: string;
   email: string;
@@ -52,6 +49,51 @@ function validateAppointmentForm(data: AppointmentFormData): AppointmentFormResu
   return Object.keys(errors).length > 0 ? errors : undefined;
 }
 
+// Send appointment to Telegram bot
+async function sendAppointmentToTelegram(data: AppointmentFormData): Promise<boolean> {
+  try {
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      console.error('Telegram credentials not configured');
+      return false;
+    }
+
+    const message = `
+📅 *New Appointment Booking*
+
+👤 *Name:* ${data.name}
+📧 *Email:* ${data.email}
+📞 *Phone:* ${data.phone}
+🔧 *Service:* ${data.service}
+📆 *Preferred Date:* ${data.date}
+
+💬 *Additional Message:*
+${data.message || 'No additional message'}
+
+⏰ *Booked at:* ${new Date().toLocaleString()}
+    `.trim();
+
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'Markdown',
+      }),
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Failed to send appointment to Telegram:', error);
+    return false;
+  }
+}
+
 // Client-side appointment booking
 export async function bookAppointmentClient(data: AppointmentFormData): Promise<AppointmentFormResult> {
   // Validate form data
@@ -65,22 +107,20 @@ export async function bookAppointmentClient(data: AppointmentFormData): Promise<
   }
 
   try {
-    // Save to Firebase
-    await addDoc(collection(db, 'appointments'), {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      service: data.service,
-      date: data.date,
-      message: data.message || '',
-      timestamp: serverTimestamp(),
-      status: 'pending',
-    });
+    // Send to Telegram bot
+    const telegramSent = await sendAppointmentToTelegram(data);
 
-    return {
-      success: true,
-      message: 'Appointment booked successfully! We will be in touch soon.',
-    };
+    if (telegramSent) {
+      return {
+        success: true,
+        message: 'Appointment booked successfully! We will be in touch soon.',
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Failed to book appointment. Please try again or contact us directly.',
+      };
+    }
 
   } catch (error) {
     console.error('Appointment booking failed:', error);

@@ -1,8 +1,5 @@
 'use client';
 
-import { db } from './firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 export interface ContactFormData {
   name: string;
   email: string;
@@ -44,6 +41,49 @@ function validateContactForm(data: ContactFormData): ContactFormResult['errors']
   return Object.keys(errors).length > 0 ? errors : undefined;
 }
 
+// Send message to Telegram bot
+async function sendToTelegram(data: ContactFormData): Promise<boolean> {
+  try {
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      console.error('Telegram credentials not configured');
+      return false;
+    }
+
+    const message = `
+🔔 *New Contact Form Submission*
+
+👤 *Name:* ${data.name}
+📧 *Email:* ${data.email}
+📝 *Subject:* ${data.subject}
+
+💬 *Message:*
+${data.message}
+
+⏰ *Time:* ${new Date().toLocaleString()}
+    `.trim();
+
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'Markdown',
+      }),
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Failed to send to Telegram:', error);
+    return false;
+  }
+}
+
 // Client-side contact form submission
 export async function submitContactFormClient(data: ContactFormData): Promise<ContactFormResult> {
   // Validate form data
@@ -57,20 +97,20 @@ export async function submitContactFormClient(data: ContactFormData): Promise<Co
   }
 
   try {
-    // Save to Firebase
-    await addDoc(collection(db, 'contact-messages'), {
-      name: data.name,
-      email: data.email,
-      subject: data.subject,
-      message: data.message,
-      timestamp: serverTimestamp(),
-      telegramSent: false,
-    });
+    // Send to Telegram bot
+    const telegramSent = await sendToTelegram(data);
 
-    return {
-      success: true,
-      message: 'Your message has been received! We will respond via email within 24 hours.',
-    };
+    if (telegramSent) {
+      return {
+        success: true,
+        message: 'Your message has been sent! We will respond via email within 24 hours.',
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Failed to send message. Please try again or contact us directly.',
+      };
+    }
 
   } catch (error) {
     console.error('Contact form submission failed:', error);
