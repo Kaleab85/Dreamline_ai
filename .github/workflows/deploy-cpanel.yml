@@ -1,8 +1,9 @@
 name: Trigger cPanel Git Deployment
 
 on:
-  push:
-    branches: [ master, main ]
+  # Disabled until cPanel webhook is configured
+  # push:
+  #   branches: [ master, main ]
   workflow_dispatch:
 
 jobs:
