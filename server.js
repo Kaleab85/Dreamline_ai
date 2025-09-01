@@ -1,24 +1,25 @@
-const next = require('next')
-const { createServer } = require('http')
 
-// Initialize Next.js app
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+(async () => {
+  const { createServer } = await import('http');
+  const { parse } = await import('url');
+  const next = await import('next');
 
-// Get port from environment or default to 3000
-const port = process.env.PORT || 3000
+  const port = parseInt(process.env.PORT || '3000', 10);
+  const dev = process.env.NODE_ENV !== 'production';
+  const hostname = process.env.NODE_ENV !== 'production' ? 'localhost' : 'dreamlineet.com';
+  const app = next.default({ dev, hostname, port });
+  const handle = app.getRequestHandler();
 
-app.prepare().then(() => {
-  createServer((req, res) => {
-    // Let Next.js handle all requests
-    handle(req, res)
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`🚀 Server ready on http://localhost:${port}`)
-    console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`)
-  })
-}).catch((ex) => {
-  console.error('❌ Server failed to start:', ex.stack)
-  process.exit(1)
-})
+  app.prepare().then(() => {
+    createServer((req, res) => {
+      const parsedUrl = parse(req.url, true);
+      handle(req, res, parsedUrl);
+    }).listen(port, () => {
+      console.log(
+        `> Server listening at http://${hostname}:${port} as ${
+          dev ? 'development' : process.env.NODE_ENV
+        }`
+      );
+    });
+  });
+})();

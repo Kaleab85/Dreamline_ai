@@ -2,10 +2,11 @@
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
+
+  "homepage": "https://dreamlineet.com",
   "scripts": {
-    "dev": "next dev --turbopack -p 9002",
+    "dev": "node server.js",
     "build": "next build",
-    "build:static": "next build",
     "build:analyze": "ANALYZE=true next build",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",

@@ -1,9 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/dreamlhf/public_html/
-    - /bin/cp -R * $DEPLOYPATH
-    - cd $DEPLOYPATH
     - npm ci --production
     - NODE_ENV=production npm run build
-    # Note: npm start will be handled by cPanel Node.js app configuration
+    # npm start will be handled by cPanel Node.js app configuration
