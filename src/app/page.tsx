@@ -142,10 +142,10 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">A</span>
+                      <span className="text-primary font-bold text-lg">N</span>
                     </div>
                     <div>
-                      <h3 className="font-headline font-bold">Abebe Tadesse</h3>
+                      <h3 className="font-headline font-bold">Natnael Yohannes</h3>
                       <p className="text-sm text-muted-foreground">University of Toronto, Canada</p>
                     </div>
                   </div>
@@ -164,11 +164,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">M</span>
+                      <span className="text-primary font-bold text-lg">N</span>
                     </div>
                     <div>
-                      <h3 className="font-headline font-bold">Meron Bekele</h3>
-                      <p className="text-sm text-muted-foreground">Oxford University, UK</p>
+                      <h3 className="font-headline font-bold">Nardos Shamebo</h3>
+                      <p className="text-sm text-muted-foreground">University of British Columbia, Canada</p>
                     </div>
                   </div>
                   <p className="text-muted-foreground mb-4">
@@ -186,15 +186,15 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">D</span>
+                      <span className="text-primary font-bold text-lg">B</span>
                     </div>
                     <div>
-                      <h3 className="font-headline font-bold">Daniel Haile</h3>
-                      <p className="text-sm text-muted-foreground">MIT, USA</p>
+                      <h3 className="font-headline font-bold">Bereket Belayneh</h3>
+                      <p className="text-sm text-muted-foreground">McGill University, Canada</p>
                     </div>
                   </div>
                   <p className="text-muted-foreground mb-4">
-                    "From application to arrival, Dreamline supported me every step of the way. Now I'm pursuing my PhD at MIT!"
+                    "From application to arrival, Dreamline supported me every step of the way. Now I'm pursuing my PhD at McGill!"
                   </p>
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (

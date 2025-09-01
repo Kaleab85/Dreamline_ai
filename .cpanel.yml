@@ -1,6 +1,9 @@
 ---
 deployment:
   tasks:
+    # Copy files from repository to Node.js app directory
+    - /bin/cp -R /home/dreamlhf/repositories/Dreamline_ai/* /home/dreamlhf/dynamic.dreamlineet.com/
+    - cd /home/dreamlhf/dynamic.dreamlineet.com
+    # Install dependencies and build
     - npm ci --production
     - NODE_ENV=production npm run build
-    # npm start will be handled by cPanel Node.js app configuration

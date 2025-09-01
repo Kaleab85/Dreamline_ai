@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from './ui/sheet';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Logo } from './logo';
+import { NavbarLogo, Logo } from './logo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -23,7 +23,11 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
-          <Logo />
+          <NavbarLogo />
+        </div>
+        {/* Mobile navbar logo */}
+        <div className="mr-4 flex md:hidden">
+          <NavbarLogo />
         </div>
         <div className="flex-1 hidden md:flex justify-center items-center">
           <nav className="flex items-center gap-6 text-sm">
