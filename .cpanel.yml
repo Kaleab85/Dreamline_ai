@@ -1,8 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/dreamlhf/dynamic.dreamlineet.com
-    - /bin/cp -R /home/dreamlhf/repositories/Dreamline_ai/* $DEPLOYPATH/
-    - cd $DEPLOYPATH
-    - npm ci --production
-    - NODE_ENV=production npm run build
+    - /bin/cp -R * /home/dreamlhf/dynamic.dreamlineet.com/
+    - cd /home/dreamlhf/dynamic.dreamlineet.com && npm ci --production
+    - cd /home/dreamlhf/dynamic.dreamlineet.com && npm run build
