@@ -10,6 +10,15 @@ export const metadata: Metadata = {
   description: 'Your trusted partner in educational consulting, visa applications, and travel coordination.',
   keywords: 'education consultancy, visa application, study abroad, travel coordination',
   authors: [{ name: 'Dreamline Consultancy' }],
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/images/dream_logo.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/images/dream_logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     title: 'Dreamline Consultancy',
     description: 'Your trusted partner in educational consulting, visa applications, and travel coordination.',
