@@ -32,4 +32,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /home/dreamlhf/dynamic.dreamlineet.com/ # e.g., /home/yourusername/nextapp/
-          local-dir: ./.next/standalone/ # This is the key. You only deploy the necessary files.
+          
