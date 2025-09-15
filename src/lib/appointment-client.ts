@@ -49,42 +49,15 @@ function validateAppointmentForm(data: AppointmentFormData): AppointmentFormResu
   return Object.keys(errors).length > 0 ? errors : undefined;
 }
 
-// Send appointment to Telegram bot
+// Send appointment via API route (secure)
 async function sendAppointmentToTelegram(data: AppointmentFormData): Promise<boolean> {
   try {
-    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-    if (!botToken || !chatId) {
-      console.error('Telegram credentials not configured');
-      return false;
-    }
-
-    const message = `
-📅 *New Appointment Booking*
-
-👤 *Name:* ${data.name}
-📧 *Email:* ${data.email}
-📞 *Phone:* ${data.phone}
-🔧 *Service:* ${data.service}
-📆 *Preferred Date:* ${data.date}
-
-💬 *Additional Message:*
-${data.message || 'No additional message'}
-
-⏰ *Booked at:* ${new Date().toLocaleString()}
-    `.trim();
-
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    const response = await fetch('/api/appointment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: 'Markdown',
-      }),
+      body: JSON.stringify(data),
     });
 
     return response.ok;

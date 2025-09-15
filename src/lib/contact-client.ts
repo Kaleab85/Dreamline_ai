@@ -41,40 +41,15 @@ function validateContactForm(data: ContactFormData): ContactFormResult['errors']
   return Object.keys(errors).length > 0 ? errors : undefined;
 }
 
-// Send message to Telegram bot
+// Send message via API route (secure)
 async function sendToTelegram(data: ContactFormData): Promise<boolean> {
   try {
-    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-    if (!botToken || !chatId) {
-      console.error('Telegram credentials not configured');
-      return false;
-    }
-
-    const message = `
-🔔 *New Contact Form Submission*
-
-👤 *Name:* ${data.name}
-📧 *Email:* ${data.email}
-📝 *Subject:* ${data.subject}
-
-💬 *Message:*
-${data.message}
-
-⏰ *Time:* ${new Date().toLocaleString()}
-    `.trim();
-
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: 'Markdown',
-      }),
+      body: JSON.stringify(data),
     });
 
     return response.ok;
