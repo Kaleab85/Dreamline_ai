@@ -16,5 +16,5 @@ deployment:
     - /bin/find ${DEPLOYPATH} -type d -exec /bin/chmod 755 '{}' \;
     - /bin/find ${DEPLOYPATH} -type f -exec /bin/chmod 644 '{}' \;
     # Install dependencies and build Next.js app
-    - cd ${DEPLOYPATH} && npm ci --production
+    - cd ${DEPLOYPATH} && npm ci
     - cd ${DEPLOYPATH} && NODE_ENV=production npm run build
