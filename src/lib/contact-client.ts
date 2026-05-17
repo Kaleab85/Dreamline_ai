@@ -42,7 +42,7 @@ function validateContactForm(data: ContactFormData): ContactFormResult['errors']
 }
 
 // Send message via API route (secure)
-async function sendToTelegram(data: ContactFormData): Promise<boolean> {
+async function sendToTelegram(data: ContactFormData): Promise<{ success: boolean; message: string }> {
   try {
     const response = await fetch('/api/contact', {
       method: 'POST',
@@ -52,10 +52,16 @@ async function sendToTelegram(data: ContactFormData): Promise<boolean> {
       body: JSON.stringify(data),
     });
 
-    return response.ok;
+    const result = await response.json();
+    
+    if (response.ok && result.success) {
+      return { success: true, message: result.message };
+    } else {
+      return { success: false, message: result.message || 'Failed to send message' };
+    }
   } catch (error) {
     console.error('Failed to send to Telegram:', error);
-    return false;
+    return { success: false, message: 'Network error occurred' };
   }
 }
 
@@ -73,19 +79,12 @@ export async function submitContactFormClient(data: ContactFormData): Promise<Co
 
   try {
     // Send to Telegram bot
-    const telegramSent = await sendToTelegram(data);
+    const result = await sendToTelegram(data);
 
-    if (telegramSent) {
-      return {
-        success: true,
-        message: 'Your message has been sent! We will respond via email within 24 hours.',
-      };
-    } else {
-      return {
-        success: false,
-        message: 'Failed to send message. Please try again or contact us directly.',
-      };
-    }
+    return {
+      success: result.success,
+      message: result.message,
+    };
 
   } catch (error) {
     console.error('Contact form submission failed:', error);

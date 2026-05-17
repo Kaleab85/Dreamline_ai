@@ -37,7 +37,7 @@ export function Footer() {
             </div>
             <div className="text-sm">
               <p>London Cafe, Hawassa, Ethiopia</p>
-              <p>Email: <a href="mailto:dreamlineet@gmail.com" className="hover:text-primary transition-colors">dreamlineet@gmail.com</a></p>
+              <p>Email: <a href="mailto:dreamlineinfo@dreamlineet.com" className="hover:text-primary transition-colors">dreamlineinfo@dreamlineet.com</a></p>
               <p>Phone: <a href="tel:+251934107400" className="hover:text-primary transition-colors">+251 934 107 400</a></p>
             </div>
           </div>

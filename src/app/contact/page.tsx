@@ -82,7 +82,7 @@ export default function ContactPage() {
                     </div>
                     <div className="flex items-center gap-4">
                         <Mail className="h-6 w-6 text-primary flex-shrink-0" />
-                        <a href="mailto:dreamlineet@gmail.com" className="hover:text-primary">dreamlineet@gmail.com</a>
+                        <a href="mailto:dreamlineinfo@dreamlineet.com" className="hover:text-primary">dreamlineinfo@dreamlineet.com</a>
                     </div>
                     <div className="flex items-center gap-4">
                         <Phone className="h-6 w-6 text-primary flex-shrink-0" />

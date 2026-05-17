@@ -31,6 +31,9 @@ ${data.message}
 ⏰ *Time:* ${new Date().toLocaleString()}
     `.trim();
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
     const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: {
@@ -41,9 +44,17 @@ ${data.message}
         text: message,
         parse_mode: 'Markdown',
       }),
+      signal: controller.signal,
     });
 
-    return response.ok;
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      console.error('Telegram API error:', response.status, response.statusText);
+      return false;
+    }
+
+    return true;
   } catch (error) {
     console.error('Failed to send to Telegram:', error);
     return false;

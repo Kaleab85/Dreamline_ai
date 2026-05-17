@@ -138,67 +138,204 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 lg:max-w-none mt-12">
-              <Card className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">N</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-bold">Natnael Yohannes</h3>
-                      <p className="text-sm text-muted-foreground">University of Toronto, Canada</p>
-                    </div>
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo1.JPG"
+                    alt="Selamawit Manaye"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
                   </div>
-                  <p className="text-muted-foreground mb-4">
-                    "Dreamline Consultancy made my dream of studying computer science in Canada a reality. Their guidance through the visa process was invaluable."
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Selamawit Manaye</h3>
+                    <p className="text-sm text-muted-foreground">Conestoga College, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy helped me achieve my goal of studying at Conestoga College. Their support throughout the application and visa process was exceptional."
                   </p>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
                     ))}
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">N</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-bold">Nardos Shamebo</h3>
-                      <p className="text-sm text-muted-foreground">University of British Columbia, Canada</p>
-                    </div>
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo2.JPG"
+                    alt="Abezash Asaye"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
                   </div>
-                  <p className="text-muted-foreground mb-4">
-                    "The team helped me secure a scholarship for my Master's degree. Their expertise in international education is unmatched."
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Abezash Asaye</h3>
+                    <p className="text-sm text-muted-foreground">Mohawk College, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy made my transition to Mohawk College seamless. Their expertise in international education and personalized guidance was incredible."
                   </p>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
                     ))}
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">B</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-bold">Bereket Belayneh</h3>
-                      <p className="text-sm text-muted-foreground">McGill University, Canada</p>
-                    </div>
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo3.JPG"
+                    alt="Kuma Kelele"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
                   </div>
-                  <p className="text-muted-foreground mb-4">
-                    "From application to arrival, Dreamline supported me every step of the way. Now I'm pursuing my PhD at McGill!"
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Kuma Kelele</h3>
+                    <p className="text-sm text-muted-foreground">Bodwell High School, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy helped me secure admission to Bodwell High School. Their guidance made my dream of studying in Canada come true at such a young age."
                   </p>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo4.jpg"
+                    alt="Bereket Belayneh"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Bereket Belayneh</h3>
+                    <p className="text-sm text-muted-foreground">Fleming College, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy guided me through every step to Fleming College. Their professional approach and dedication made all the difference in my educational journey."
+                  </p>
+                  <div className="flex items-center justify-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo5.jpg"
+                    alt="Natnael Yohannes"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Natnael Yohannes</h3>
+                    <p className="text-sm text-muted-foreground">Canadian Technology College, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy helped me secure my place at Canadian Technology College. Their technical expertise and guidance were invaluable throughout the process."
+                  </p>
+                  <div className="flex items-center justify-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo6.jpg"
+                    alt="Bethelihem Workagegnehu"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Bethelihem Workagegnehu</h3>
+                    <p className="text-sm text-muted-foreground">Memorial University, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Thanks to Dreamline Consultancy, I'm now studying at Memorial University. Their expertise in university applications and visa processes was outstanding."
+                  </p>
+                  <div className="flex items-center justify-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative">
+                  <Image
+                    src="/images/testmo7.jpg"
+                    alt="Nardos Shambo"
+                    width={400}
+                    height={400}
+                    className="w-full h-64 object-cover object-top"
+                  />
+                  <div className="absolute top-3 left-3 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
+                    Dreamline Success
+                  </div>
+                </div>
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <h3 className="font-headline font-bold text-lg">Nardos Shambo</h3>
+                    <p className="text-sm text-muted-foreground">Conestoga College, Canada</p>
+                  </div>
+                  <p className="text-muted-foreground mb-4 italic">
+                    "Dreamline Consultancy made my admission to Conestoga College smooth and stress-free. Their personalized support was exactly what I needed."
+                  </p>
+                  <div className="flex items-center justify-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
                     ))}
                   </div>
                 </CardContent>

@@ -140,7 +140,7 @@ export default function BookAppointmentPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span>Email: dreamlineet@gmail.com</span>
+                  <span>Email: dreamlineinfo@dreamlineet.com</span>
                 </div>
               </div>
               <div className="mt-6">
