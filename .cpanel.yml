@@ -2,7 +2,7 @@
 deployment:
   tasks:
     # Set the deployment path
-    - export DEPLOYPATH=/home/dreamlhf/public_html
+    - export DEPLOYPATH=/home/dreamlhf/dynamic.dreamlineet.com
     # Set the repository path
     - export REPOPATH=/home/dreamlhf/repositories/Dreamline_ai
     # Remove previous old files, if any
